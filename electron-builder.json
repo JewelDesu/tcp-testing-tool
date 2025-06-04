@@ -1,0 +1,17 @@
+{
+    "appId": "com.bingus.app",
+    "files": ["dist-electron", "dist-react"],
+    "extraResources": ["dist-electron/preload.cjs", "src/assets/**"],
+    "icon":"./src/assets/icon.ico",
+    "mac":{
+        "target": "dmg"
+    },
+    "linux":{
+        "target": "AppImage",
+        "category": "Utility"
+    },
+    "win":{
+        "target": ["portable", "msi"],
+        "icon":"./src/assets/icon.ico"
+    }
+}

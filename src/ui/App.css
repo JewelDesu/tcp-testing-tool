@@ -1,0 +1,70 @@
+.charts {
+  padding: 0.5rem;
+  height: 418px;
+}
+
+header {
+  display: grid;
+  grid-template-columns: auto auto;
+  width: 100%;
+  text-align: right;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: rgb(52, 64, 85);
+  -webkit-app-region: drag;
+}
+.titleBar {
+  margin-left: 10px;
+  text-align: left;
+}
+header button {
+  all:unset;
+  width: 1rem;
+  height: 1rem;
+  margin: 0.25rem;
+  -webkit-app-region: no-drag;
+}
+
+.window{
+  display: grid;
+  grid-template-columns: auto 24rem ;
+  gap: 1rem;
+  align-items: center;
+  margin: 1rem;
+  max-width: 1300px;
+  margin: auto;
+  height: 100px;
+}
+
+.options {
+  display: block;
+  padding: 0.5rem;
+  width: 90%;
+  margin: 0.5rem;
+  background-color: rgb(52, 64, 85);
+}
+.options:hover {
+  background-color: rgb(87, 105, 138);
+}
+
+.optionChart {
+height: 90px;
+width: 100%;
+}
+
+.optionSelect {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.optionSelect :first-child {
+  font-weight: 500;
+}
+.optionSelect :nth-child(2) {
+  font-weight: 400;
+  font-size: 14px;
+}
+
+#close {
+  margin-right: 10px;
+}
