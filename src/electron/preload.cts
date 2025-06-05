@@ -12,7 +12,8 @@ electron.contextBridge.exposeInMainWorld('electron', {
      getStaticData: () => ipcInvoke("getStaticData"),
 
     changeFrameAction: (payload) => ipcSend('changeFrameAction', payload),
-    startTcpTest: (payload) => ipcSend('startTcpTest', payload),
+    //startTcpTest: (channel, data) => ipcSend('startTcpTest', payload),
+    
 } satisfies Window['electron']);
 
 function ipcInvoke<Key extends keyof EventPayload>(

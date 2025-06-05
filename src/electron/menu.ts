@@ -16,14 +16,14 @@ export function createMenu(mainWindow: BrowserWindow) {
         submenu: [
         {
             label: "CPU",
-            click: () => ipcWebContentsSend("changeView", mainWindow.webContents, 'CPU'),
+            //click: () => ipcWebContentsSend("changeView", mainWindow.webContents, 'CPU'),
         },
                 {
             label: "RAM",
-            click: () => ipcWebContentsSend("changeView", mainWindow.webContents, 'RAM'),
+            //click: () => ipcWebContentsSend("changeView", mainWindow.webContents, 'RAM'),
         },        {
             label: "STORAGE",
-            click: () => ipcWebContentsSend("changeView", mainWindow.webContents, 'STORAGE'),
+            //click: () => ipcWebContentsSend("changeView", mainWindow.webContents, 'STORAGE'),
         }
     ]
     },

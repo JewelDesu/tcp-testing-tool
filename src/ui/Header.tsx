@@ -1,8 +1,13 @@
-export default function Header(props: {host: string}) {
+export default function Header(props: {host: string, openTest: boolean, onTestToggle: () => void, onTestClose: () => void}) {
     return(
         <header>
           <div className="titleBar">
-            {props.host}
+            <div className="titleBarDiv">
+              <button onClick={() => console.log("CLICK")}> {props.host} </button>
+            </div>
+            <div className="titleBarDiv">
+              <button onClick={props.onTestToggle}> test server </button>
+            </div>
           </div>
           <div>
             <button id="minimize" onClick={() => window.electron.changeFrameAction('MINIMIZE')}>

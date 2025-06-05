@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import './App.css';
 import Header from "./Header";
+import TestServer from "./TestServer";
 
 let socket: Socket;
 
@@ -10,9 +11,22 @@ export default function TcpTesterApp() {
   const [duration, setDuration] = useState("30");
   const [logs, setLogs] = useState<string[]>([]);
   const [totalPackets, setTotalPackets] = useState(0);
+  const [message, setMessage] = useState("");
   const [connected, setConnected] = useState(false);
   const staticData = getUserData();
   const [testServer, setTestServer] = useState(false);
+
+  const toggleTestServer = () => {
+  const newValue = !testServer;
+  setTestServer(newValue);
+
+  if (newValue) {
+    console.log('startTcpTest');
+  } else {
+    console.log('stop-test-server');
+  }
+};
+
 
   useEffect(() => {
     socket = io("http://localhost:3000"); // Your backend server
@@ -56,6 +70,7 @@ export default function TcpTesterApp() {
       target: server,
       duration: parseInt(duration, 10),
       packetDelay: 1000,
+      sillyMessage: message,
       attackMethod: "tcp_flood",
     });
 
@@ -64,18 +79,33 @@ export default function TcpTesterApp() {
 
   return (
     <div className="App">
-      <Header host={staticData?.hostName ?? ''}/>
-      <div className="max-w-xl mx-auto p-6 space-y-6">
-        {/* Input Fields */}
+      <Header host={staticData?.hostName ?? ''} openTest={testServer} onTestToggle={toggleTestServer} onTestClose={() => setTestServer(false)}/>
+        <div className='window'>
+      <div>
         <div className="inputs">
-          <input
+
+            <input
             type="text"
             placeholder="Server (e.g. 192.168.0.1:80)"
             className="input"
             value={server}
             onChange={(e) => setServer(e.target.value)}
           />
-          <input
+           
+         
+            <input
+            type="text"
+            placeholder="Your silly message"
+            className="input"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            /> 
+
+          <div>
+            <label>
+              Duration (s)
+            </label>
+            <input
             type="number"
             placeholder="Duration (seconds)"
             className="duration-input"
@@ -83,14 +113,17 @@ export default function TcpTesterApp() {
             onChange={(e) => setDuration(e.target.value)}
             min="1"
             max="120"
-          />
-          <button
-            onClick={handleStartTest}
-            disabled={!connected}
-            className="start-button"
-          >
-            {connected ? "Start Test" : "Connecting..."}
-          </button>
+            /> 
+
+            <button
+              onClick={handleStartTest}
+              disabled={!connected}
+              className="start-button"
+            >
+              {connected ? "Start Test" : "Connecting..."}
+            </button>
+          </div>
+
         </div>
 
         {/* Logs Section */}
@@ -103,7 +136,7 @@ export default function TcpTesterApp() {
                 </div>
               ))
             ) : (
-              <div className="italic text-gray-500">{">"} Waiting for Miku's power...</div>
+              <div className="italic text-gray-500">{">"} Connecting to main server</div>
             )}
           </div>
         </div>
@@ -113,6 +146,11 @@ export default function TcpTesterApp() {
           Total Packets Sent: <strong>{totalPackets}</strong>
         </div>
       </div>
+      <div>
+          <TestServer openTestServer={testServer} onTestServerClose={() => setTestServer(false)} />
+      </div>
+      </div>
+
     </div>
   );
 }

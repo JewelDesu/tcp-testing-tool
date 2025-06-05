@@ -42,7 +42,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("startAttack", (params) => {
-    const { target, duration, packetDelay, attackMethod, packetSize } = params;
+    const { target, duration, attackMethod, sillyMessage } = params;
     const filteredProxies = filterProxies(proxies, attackMethod);
     const attackWorkerFile = "./tcpWorkers.js";
 
@@ -63,8 +63,7 @@ io.on("connection", (socket) => {
         target,
         proxies: filteredProxies,
         duration,
-        packetDelay,
-        packetSize,
+        sillyMessage,
       },
     });
 

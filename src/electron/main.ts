@@ -1,9 +1,12 @@
-import  { app, BrowserWindow, Tray } from 'electron';
+import  { app, BrowserWindow, ipcMain, Tray } from 'electron';
 import { ipcMainHandle, ipcMainOn, isDev } from './util.js'
-import { getStaticData, poll } from './resources.js';
+import { getStaticData } from './resources.js';
 import { getAssetPath, getPreloadPath, getUIPath } from './pathResolve.js';
 import path from 'path';
 import { createMenu } from './menu.js';
+import net from 'net';
+
+let testServer: net.Server | null = null;
 
 app.on("ready", () => {
   const mainWindow = new BrowserWindow({
@@ -11,33 +14,59 @@ app.on("ready", () => {
           preload: getPreloadPath(),
       },
       //frame: false,
-      height: 520,
+      height: 620,
   });
   if(isDev()){
       mainWindow.loadURL('http://localhost:5123');
   } else {
       mainWindow.loadFile(getUIPath());
   }
-  poll(mainWindow);
   
   ipcMainHandle("getStaticData", () => {
       return getStaticData();
   })
 
-ipcMainOn('changeFrameAction', (payload) => {
-    switch (payload) {
-      case 'CLOSE':
-        mainWindow.close();
-        app.quit();
-        break;
-      case 'MAXIMIZE':
-        mainWindow.isMaximized() ? mainWindow.unmaximize() : mainWindow.maximize();
-        break;
-      case 'MINIMIZE':
-        mainWindow.minimize();
-        break;
-    }
-  });
+  ipcMainOn('changeFrameAction', (payload) => {
+      switch (payload) {
+        case 'CLOSE':
+          mainWindow.close();
+          app.quit();
+          break;
+        case 'MAXIMIZE':
+          mainWindow.isMaximized() ? mainWindow.unmaximize() : mainWindow.maximize();
+          break;
+        case 'MINIMIZE':
+          mainWindow.minimize();
+          break;
+      }
+    });
+
+ipcMain.on('startTcpTest', () => {
+  if (!testServer) {
+    testServer = net.createServer((socket) => {
+      console.log('Client connected');
+
+      socket.on('end', () => {
+        console.log('Client disconnected');
+      });
+
+      socket.write('Hello from server!\n');
+    });
+
+    testServer.listen(12345, () => {
+      console.log('Test server running on port 12345');
+    });
+  }
+});
+
+ipcMain.on('stop-test-server', () => {
+  if (testServer) {
+    testServer.close(() => {
+      console.log('Test server stopped');
+      testServer = null;
+    });
+  }
+});
 
     createMenu(mainWindow);
     handleCloseEvents(mainWindow);
