@@ -1,5 +1,5 @@
 import { parentPort, workerData } from 'worker_threads';
-import net from 'net';
+import * as net from 'net';
 import { Socket } from 'net';
 import { SocksProxyAgent } from "socks-proxy-agent";
 

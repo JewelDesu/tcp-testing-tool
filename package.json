@@ -5,9 +5,11 @@
   "type": "module",
   "main": "dist-electron/main.js",
   "scripts": {
-    "dev": "npm-run-all --parallel dev:react dev:electron",
-    "dev:react": "vite",
+    "dev": "npm-run-all --parallel dev:react dev:electron dev:server",
+    "dev:react": "cross-env NODE_ENV=development vite",
     "dev:electron": "npm run transpile:electron&& cross-env NODE_ENV=development electron .",
+    "dev:server": "cross-env NODE_ENV=development tsx watch SRC/server/tcpTestServer.ts",
+    "dev:testserver": "cross-env NODE_ENV=development tsx watch SRC/server/testServer.ts",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
@@ -17,15 +19,20 @@
     "dist:win": "npm run transpile:electron && npm run build && electron-builder --win --x64"
   },
   "dependencies": {
+    "express": "^5.1.0",
+    "lucide-react": "^0.513.0",
     "os-utils": "^0.0.14",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "recharts": "^2.15.3",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1",
     "tcp-testing": "file:"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",
     "@types/electron": "^1.4.38",
+    "@types/express": "^5.0.2",
     "@types/os-utils": "^0.0.4",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",

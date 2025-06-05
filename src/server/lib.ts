@@ -7,3 +7,6 @@ export interface Proxy {
   host: string;
   port: number;
 }
+
+export type AttackMethod =
+  | "tcp_flood";

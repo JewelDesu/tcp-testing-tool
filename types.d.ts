@@ -34,13 +34,13 @@ interface Window {
         // subscribeStatistics: (
         //     callback: (statistics: Statistics) => void
         // ) => UnsubscribeFunction;
-        // getStaticData: () => Promise<StaticData>;
+         getStaticData: () => Promise<StaticData>;
 
         // subscribeChangeView: (
         //     callback: (view: View) => void
         // ) => UnsubscribeFunction;
 
-        // changeFrameAction: (payload: FrameWindowAction) => void;
+        changeFrameAction: (payload: FrameWindowAction) => void;
 
         startTcpTest: (payload: TcpTest) => void  ;
     }
