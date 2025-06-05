@@ -102,15 +102,12 @@ const tcpTest = () => {
         log: `to ${fixedTarget} `,
         totalPackets,
       });
-            parentPort.postMessage({
-        log: `Message sent: ${message}`,
-        totalPackets,
-      });
+      
       const interval = setInterval(() => {
         if (socket.writable && socket["open"]) {
           socket.write(sillyMessage);
           parentPort.postMessage({
-            log: `📨 Sent random: ${sillyMessage}`,
+            log: `Message sent: ${sillyMessage}`,
             totalPackets,
           });
         } else {
