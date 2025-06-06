@@ -1,6 +1,5 @@
 import { app, BrowserWindow, Menu } from "electron";
 import { getStaticData } from "./resources.js";
-import { ipcWebContentsSend } from "./util.js";
 
 export function createMenu(mainWindow: BrowserWindow) {
 

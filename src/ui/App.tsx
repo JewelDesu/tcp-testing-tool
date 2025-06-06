@@ -15,17 +15,18 @@ export default function TcpTesterApp() {
   const [connected, setConnected] = useState(false);
   const staticData = getUserData();
   const [testServer, setTestServer] = useState(false);
+  const [testing, setTesting] = useState(false);
 
   const toggleTestServer = () => {
-  const newValue = !testServer;
-  setTestServer(newValue);
+    const newValue = !testServer;
+    setTestServer(newValue);
 
-  if (newValue) {
-    console.log('startTcpTest');
-  } else {
-    console.log('stop-test-server');
-  }
-};
+    if (newValue) {
+      window.electron.startTcpTest('startTcpTest');
+    } else {
+      window.electron.startTcpTest('stopTcpTest');
+    }
+  };
 
 
   useEffect(() => {
@@ -42,12 +43,13 @@ export default function TcpTesterApp() {
       }
     });
 
-    socket.on("attackEnd", () => {
-      addLog("🚫 Test finished");
+    socket.on("testEnd", () => {
+      addLog("Test finished");
+      setTesting(false);
     });
 
     socket.on("disconnect", () => {
-      addLog("🔌 Disconnected from server");
+      addLog("Disconnected from server");
       setConnected(false);
     });
 
@@ -62,11 +64,11 @@ export default function TcpTesterApp() {
 
   const handleStartTest = () => {
     if (!server || !duration) {
-      addLog("⚠️ Please provide both server and duration.");
+      addLog("Please provide both server and duration.");
       return;
     }
-
-    socket.emit("startAttack", {
+    setTesting(true);
+    socket.emit("startTest", {
       target: server,
       duration: parseInt(duration, 10),
       packetDelay: 1000,
@@ -74,8 +76,15 @@ export default function TcpTesterApp() {
       attackMethod: "tcp_flood",
     });
 
-    addLog(`🚀 Started test on ${server} for ${duration}s`);
+    
+
+    addLog(`Started test on ${server} for ${duration}s`);
   };
+
+  const handleTestStop = () => {
+    socket.emit("stopTest");
+    setTesting(false);
+  }
 
   return (
     <div className="App">
@@ -83,44 +92,41 @@ export default function TcpTesterApp() {
         <div className='window'>
       <div>
         <div className="inputs">
-
-            <input
+          <input
             type="text"
             placeholder="Server (e.g. 192.168.0.1:80)"
             className="input"
             value={server}
             onChange={(e) => setServer(e.target.value)}
           />
-           
-         
-            <input
+          <input
             type="text"
             placeholder="Your silly message"
             className="input"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            /> 
+          /> 
 
           <div>
             <label>
               Duration (s)
             </label>
             <input
-            type="number"
-            placeholder="Duration (seconds)"
-            className="duration-input"
-            value={duration}
-            onChange={(e) => setDuration(e.target.value)}
-            min="1"
-            max="120"
+              type="number"
+              placeholder="Duration (seconds)"
+              className="duration-input"
+              value={duration}
+              onChange={(e) => setDuration(e.target.value)}
+              min="1"
+              max="120"
             /> 
 
             <button
-              onClick={handleStartTest}
+              onClick={() => (testing ? handleTestStop() : handleStartTest())}
               disabled={!connected}
               className="start-button"
             >
-              {connected ? "Start Test" : "Connecting..."}
+              {connected ? (testing ? "Stop" : "Start") : "Connecting..."}
             </button>
           </div>
 
@@ -130,9 +136,9 @@ export default function TcpTesterApp() {
         <div className="log-box">
           <div className="log-text">
             {logs.length > 0 ? (
-              logs.slice(-10).map((log, index) => (
+              logs.slice(-40).map((log, index) => (
                 <div key={index} className="py-1">
-                  {`> ${log}`}
+                  {`$ ${log}`}
                 </div>
               ))
             ) : (

@@ -5,7 +5,6 @@ import { dirname, join } from "path";
 import { Server } from "socket.io";
 import { fileURLToPath } from "url";
 import { Worker } from "worker_threads";
-
 import bodyParser from "body-parser";
 import { currentPath, loadProxies } from "./loading.js";
 import { filterProxies } from "./util.js";
@@ -41,20 +40,20 @@ io.on("connection", (socket) => {
     log: "successfully connected to backend",
   });
 
-  socket.on("startAttack", (params) => {
+  socket.on("startTest", (params) => {
     const { target, duration, attackMethod, sillyMessage } = params;
     const filteredProxies = filterProxies(proxies, attackMethod);
     const attackWorkerFile = "./tcpWorkers.js";
 
     if (!attackWorkerFile) {
       socket.emit("stats", {
-        log: `❌ Unsupported attack type: ${attackMethod}`,
+        log: `Unsupported attack type: ${attackMethod}`,
       });
       return;
     }
 
     socket.emit("stats", {
-      log: `🍒 Using ${filteredProxies.length} filtered proxies to perform attack.`,
+      log: `Using ${filteredProxies.length} filtered proxies to perform attack.`,
       bots: filteredProxies.length,
     });
 
@@ -71,22 +70,22 @@ io.on("connection", (socket) => {
 
     worker.on("error", (error) => {
       console.error(`Worker error: ${error.message}`);
-      socket.emit("stats", { log: `❌ Worker error: ${error.message}` });
+      socket.emit("stats", { log: `Worker error: ${error.message}` });
     });
 
     worker.on("exit", (code) => {
       console.log(`Worker exited with code ${code}`);
-      socket.emit("attackEnd");
+      socket.emit("testEnd");
     });
 
     socket["worker"] = worker;
   });
 
-  socket.on("stopAttack", () => {
+  socket.on("stopTest", () => {
     const worker = socket["worker"];
     if (worker) {
       worker.terminate();
-      socket.emit("attackEnd");
+      socket.emit("testEnd");
     }
   });
 

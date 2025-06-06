@@ -94,7 +94,7 @@ const sendPacket = (proxy: ProxyConfig) => {
   socket.on('connect', () => {
     totalPackets++;
     parentPort?.postMessage({
-      log: `✅ Packet sent from ${proxy.protocol}://${proxy.host}:${proxy.port} to ${fixedTarget}`,
+      log: `Packet sent from ${proxy.protocol}://${proxy.host}:${proxy.port} to ${fixedTarget}`,
       totalPackets,
     });
 
@@ -109,7 +109,7 @@ const sendPacket = (proxy: ProxyConfig) => {
 
   socket.on('error', (err) => {
     parentPort?.postMessage({
-      log: `❌ Packet failed from ${proxy.protocol}://${proxy.host}:${proxy.port} to ${fixedTarget}: ${err.message}`,
+      log: `Packet failed from ${proxy.protocol}://${proxy.host}:${proxy.port} to ${fixedTarget}: ${err.message}`,
       totalPackets,
     });
   });
@@ -120,7 +120,7 @@ const interval = setInterval(() => {
 
   if (elapsedTime >= duration) {
     clearInterval(interval);
-    parentPort?.postMessage({ log: '⚠️ Attack finished', totalPackets });
+    parentPort?.postMessage({ log: 'Test finished', totalPackets });
     process.exit(0);
   }
 

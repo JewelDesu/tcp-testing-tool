@@ -8,29 +8,31 @@ const [logs, setLogs] = useState<string[]>([]);
 
 
 useEffect(() => {
-socket = io("http://localhost:9001"); // Your backend server
+    if (openTestServer) {
+        socket = io("http://localhost:9001"); // Your backend server
 
-socket.on("connect", () => {
-    addLog("Connected to test server");
-});
+        socket.on("connect", () => {
+            addLog("Connected to test server");
+        });
 
-socket.on("stats", (data) => {
-      if (data.log) addLog(data.log);
-    });
+        socket.on("stats", (data) => {
+            if (data.log) addLog(data.log);
+            });
 
-socket.on("data", (data) => {
-  if (data.log) addLog(data.log);
-});
+        socket.on("data", (data) => {
+        if (data.log) addLog(data.log);
+        });
 
 
-socket.on("disconnect", () => {
-    addLog("🔌 Disconnected from server");
-});
+        socket.on("disconnect", () => {
+            addLog("🔌 Disconnected from server");
+        });
 
-return () => {
-    socket.disconnect();
-};
-}, []);
+        return () => {
+            socket.disconnect();
+        };
+    }
+}, [openTestServer]);
 
 const addLog = (message: string) => {
 setLogs((prev) => [...prev, message]);
@@ -40,14 +42,16 @@ setLogs((prev) => [...prev, message]);
         return(
             <div>
                 <div className="testserver">
-                    TEST SERVER
+                    TEST SERVER:
+                    127.0.0.1:9000
                 </div>
-                <div className="log-box">
+                
+                <div className="log-box2">
                     <div className="log-text">
                         {logs.length > 0 ? (
-                        logs.slice(-10).map((log, index) => (
+                        logs.slice(-40).map((log, index) => (
                             <div key={index} className="py-1">
-                            {`> ${log}`}
+                            {`$ ${log}`}
                             </div>
                         ))
                     ) : (

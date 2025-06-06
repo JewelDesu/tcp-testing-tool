@@ -141,6 +141,19 @@ width: 100%;
   max-width: 750px;
 }
 
+.log-box2 {
+  margin: 0.5rem;
+  padding: 1rem;
+  font-family: monospace;
+  font-size: 0.875rem;
+  background-color: rgb(52, 64, 85);
+  border-radius: 0.5rem;
+  border: 2px solid #706e99;
+  height: 25rem;
+  overflow-y: auto;
+  max-width: 750px;
+}
+
 .log-text {
   color: #ffffff;
   font-family:"mononoki", monospace,sans-serif;

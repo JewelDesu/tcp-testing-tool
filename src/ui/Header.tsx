@@ -6,7 +6,7 @@ export default function Header(props: {host: string, openTest: boolean, onTestTo
               <button onClick={() => console.log("CLICK")}> {props.host} </button>
             </div>
             <div className="titleBarDiv">
-              <button onClick={props.onTestToggle}> test server </button>
+              <button onClick={props.onTestToggle}> {props.openTest ? "Close Test Server" : "Open Test Server"} </button>
             </div>
           </div>
           <div>

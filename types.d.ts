@@ -11,12 +11,13 @@ type EventPayload = {
     startTcpTest: TcpTest;
 }
 
-type TcpTest = send;
+type TcpTest = "startTcpTest" | "stopTcpTest";
 
 type UnsubscribeFunction = () => void;
 
 interface Window {
     electron: {
+        startTcpTest: (payload: TcpTest) => void;
         getStaticData: () => Promise<StaticData>;
         changeFrameAction: (payload: FrameWindowAction) => void;
     }

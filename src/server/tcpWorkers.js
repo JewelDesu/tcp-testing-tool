@@ -16,17 +16,6 @@ export function createAgent(proxy) {
   return new SocksProxyAgent(uri);
 }
 
-export function randomString(length) {
-  let result = "";
-  const characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  const charactersLength = characters.length;
-  for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
-}
-
 const DEFAULT_SOCKET_CONFIG = {
   host: "127.0.0.1",
   port: 1080,
@@ -95,11 +84,7 @@ const tcpTest = () => {
       //socket.write(message);
 
       parentPort.postMessage({
-        log: `📨 Packet sent from ${proxy.protocol}://${proxy.host}:${proxy.port}`,
-        totalPackets,
-      });
-            parentPort.postMessage({
-        log: `to ${fixedTarget} `,
+        log: `Packet sent from ${proxy.protocol}://${proxy.host}:${proxy.port} to ${fixedTarget} `,
         totalPackets,
       });
       
@@ -108,17 +93,16 @@ const tcpTest = () => {
           socket.write(sillyMessage);
           parentPort.postMessage({
             log: `Message sent: ${sillyMessage}`,
-            totalPackets,
           });
         } else {
           clearInterval(interval);
         }
-      }, 3000);
+      }, 1000);
     });
 
     socket.on("error", (err) => {
       parentPort.postMessage({
-        log: `❌ Packet failed from ${proxy.protocol}://${proxy.host}:${proxy.port} to ${fixedTarget}: ${err.message}`,
+        log: `Packet failed from ${proxy.protocol}://${proxy.host}:${proxy.port} to ${fixedTarget}: ${err.message}`,
         totalPackets,
       });
     });
