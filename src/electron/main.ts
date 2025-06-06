@@ -19,7 +19,7 @@ app.on("ready", () => {
       },
       //frame: false,
       height: 620,
-      width:730,
+      width:718,
   });
   if(isDev()){
       mainWindow.loadURL('http://localhost:5123');
@@ -49,10 +49,10 @@ app.on("ready", () => {
   ipcMainOn('resizeWindow', (payload) => {
     switch (payload) {
       case 'smaller':
-        mainWindow.setSize(730, 620);
+        mainWindow.setSize(718, 620);
         break;
       case 'bigger':
-        mainWindow.setSize(1250, 620);
+        mainWindow.setSize(1238, 620);
         break;
     }
     

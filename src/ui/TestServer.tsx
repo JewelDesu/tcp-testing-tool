@@ -3,7 +3,7 @@ import { io, Socket } from "socket.io-client";
 
 let socket: Socket;
 
-const TestServer = ({openTestServer, onTestServerClose}) => {
+const TestServer = (openTestServer: unknown) => {
 const [logs, setLogs] = useState<string[]>([]);
 
 

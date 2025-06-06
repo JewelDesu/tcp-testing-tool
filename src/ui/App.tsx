@@ -155,7 +155,7 @@ export default function TcpTesterApp() {
         </div>
       </div>
       <div>
-          <TestServer openTestServer={testServer} onTestServerClose={() => setTestServer(false)} />
+          <TestServer openTestServer={testServer} />
       </div>
       </div>
 
