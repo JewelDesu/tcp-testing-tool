@@ -19,6 +19,7 @@ app.on("ready", () => {
       },
       //frame: false,
       height: 620,
+      width:730,
   });
   if(isDev()){
       mainWindow.loadURL('http://localhost:5123');
@@ -43,6 +44,18 @@ app.on("ready", () => {
         mainWindow.minimize();
         break;
     }
+  });
+
+  ipcMainOn('resizeWindow', (payload) => {
+    switch (payload) {
+      case 'smaller':
+        mainWindow.setSize(730, 620);
+        break;
+      case 'bigger':
+        mainWindow.setSize(1250, 620);
+        break;
+    }
+    
   });
 
   ipcMainOn('startTcpTest', (payload) => {

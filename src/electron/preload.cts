@@ -1,10 +1,10 @@
 const electron = require('electron');
 
 electron.contextBridge.exposeInMainWorld('electron', {
-    getStaticData: () => ipcInvoke("getStaticData"),
-    changeFrameAction: (payload) => ipcSend('changeFrameAction', payload),
-    startTcpTest: (payload) => ipcSend('startTcpTest', payload),
-    
+  getStaticData: () => ipcInvoke("getStaticData"),
+  changeFrameAction: (payload) => ipcSend('changeFrameAction', payload),
+  startTcpTest: (payload) => ipcSend('startTcpTest', payload),
+  resizeWindow: (payload) => ipcSend('resizeWindow', payload ),
 } satisfies Window['electron']);
 
 function ipcInvoke<Key extends keyof EventPayload>(

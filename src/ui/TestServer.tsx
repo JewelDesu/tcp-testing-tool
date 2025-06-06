@@ -40,6 +40,7 @@ setLogs((prev) => [...prev, message]);
     if(!openTestServer) return null
     else{
         return(
+            
             <div>
                 <div className="testserver">
                     TEST SERVER:

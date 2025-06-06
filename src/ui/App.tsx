@@ -23,8 +23,10 @@ export default function TcpTesterApp() {
 
     if (newValue) {
       window.electron.startTcpTest('startTcpTest');
+      window.electron.resizeWindow('bigger')
     } else {
       window.electron.startTcpTest('stopTcpTest');
+      window.electron.resizeWindow('smaller')
     }
   };
 
