@@ -2,8 +2,11 @@ import { useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
 
 let socket: Socket;
+type TestServerProps = {
+  openTestServer: boolean;
+};
 
-const TestServer = (openTestServer: unknown) => {
+const TestServer = ({ openTestServer }: TestServerProps) => {
 const [logs, setLogs] = useState<string[]>([]);
 
 

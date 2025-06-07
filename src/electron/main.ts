@@ -2,6 +2,7 @@ import  { app, BrowserWindow, ipcMain, Tray } from 'electron';
 import { ipcMainHandle, ipcMainOn, isDev } from './util.js'
 import { getStaticData } from './resources.js';
 import { getAssetPath, getPreloadPath, getUIPath } from './pathResolve.js';
+import { spawn } from 'child_process';
 import path from 'path';
 import { createMenu } from './menu.js';
 import net from 'net';
@@ -17,7 +18,7 @@ app.on("ready", () => {
       webPreferences:{
           preload: getPreloadPath(),
       },
-      //frame: false,
+      frame: false,
       height: 620,
       width:718,
   });
@@ -131,19 +132,30 @@ app.on("ready", () => {
     }
   });
 
-ipcMain.on('stopTcpTest', () => {
-  if (testServer) {
-    testServer.close(() => {
-      console.log('Test server stopped');
-      testServer = null;
-      httpServer = null;
-    });
-  }
-});
+  ipcMain.on('stopTcpTest', () => {
+    if (testServer) {
+      testServer.close(() => {
+        console.log('Test server stopped');
+        testServer = null;
+        httpServer = null;
+      });
+    }
+  });
 
-    createMenu(mainWindow);
-    handleCloseEvents(mainWindow);
-    new Tray(path.join(getAssetPath(), process.platform === "win32" ? 'icon.ico' : 'icon@2x.png'));
+  const serverPath = path.join(__dirname, '../dist-electron/tcpTestServer.cjs');
+  const testServerPath = path.join(__dirname, '../dist-electron/testServer.cjs');
+
+  spawn('node', [serverPath], {
+    stdio: 'inherit',
+  });
+
+  spawn('node', [testServerPath], {
+    stdio: 'inherit',
+  });
+
+  createMenu(mainWindow);
+  handleCloseEvents(mainWindow);
+  new Tray(path.join(getAssetPath(), process.platform === "win32" ? 'icon.ico' : 'icon@2x.png'));
 
 });
 

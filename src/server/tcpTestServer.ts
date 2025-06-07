@@ -1,13 +1,12 @@
 import express from "express";
-import { readFileSync, writeFileSync } from "fs";
 import { createServer } from "http";
 import { dirname, join } from "path";
 import { Server } from "socket.io";
 import { fileURLToPath } from "url";
 import { Worker } from "worker_threads";
-import bodyParser from "body-parser";
-import { currentPath, loadProxies } from "./loading.js";
+import { loadProxies } from "./loading.js";
 import { filterProxies } from "./util.js";
+
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -77,12 +76,13 @@ io.on("connection", (socket) => {
       console.log(`Worker exited with code ${code}`);
       socket.emit("testEnd");
     });
-
-    socket["worker"] = worker;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (socket as any)["worker"] = worker;
   });
 
   socket.on("stopTest", () => {
-    const worker = socket["worker"];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const worker = (socket as any)["worker"];
     if (worker) {
       worker.terminate();
       socket.emit("testEnd");
@@ -90,56 +90,13 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    const worker = socket["worker"];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const worker = (socket as any)["worker"];
     if (worker) {
       worker.terminate();
     }
     console.log("Client disconnected");
   });
-});
-
-app.get("/configuration", (req, res) => {
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:5123");
-  res.setHeader("Content-Type", "application/json");
-
-  const proxiesText = readFileSync(
-    join(currentPath(), "data", "proxies.txt"),
-    "utf-8"
-  );
-  const uasText = readFileSync(join(currentPath(), "data", "uas.txt"), "utf-8");
-
-  res.send({
-    proxies: btoa(proxiesText),
-    uas: btoa(uasText),
-  });
-});
-
-app.options("/configuration", (req, res) => {
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:5123");
-  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-  res.send();
-});
-
-app.post("/configuration", bodyParser.json(), (req, res) => {
-  res.setHeader("Access-Control-Allow-Methods", "POST");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
-  res.setHeader("Content-Type", "application/text");
-
-  // console.log(req.body)
-
-  // atob and btoa are used to avoid the problems in sending data with // characters, etc.
-  const proxies = atob(req.body["proxies"]);
-  const uas = atob(req.body["uas"]);
-  writeFileSync(join(currentPath(), "data", "proxies.txt"), proxies, {
-    encoding: "utf-8",
-  });
-  writeFileSync(join(currentPath(), "data", "uas.txt"), uas, {
-    encoding: "utf-8",
-  });
-
-  res.send("OK");
 });
 
 const PORT = parseInt(process.env.PORT || "3000");

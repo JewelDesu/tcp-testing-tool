@@ -13,7 +13,7 @@ export default function TcpTesterApp() {
   const [totalPackets, setTotalPackets] = useState(0);
   const [message, setMessage] = useState("");
   const [connected, setConnected] = useState(false);
-  const staticData = getUserData();
+  const staticData = useUserData();
   const [testServer, setTestServer] = useState(false);
   const [testing, setTesting] = useState(false);
 
@@ -163,12 +163,12 @@ export default function TcpTesterApp() {
   );
 }
 
-function getUserData() {
-  const [userData, getUserData] = useState<StaticData | null>(null);
+function useUserData() {
+  const [userData, setUserData] = useState<StaticData | null>(null);
 
   useEffect(() => {
     (async () => {
-      getUserData(await window.electron.getStaticData())
+      setUserData(await window.electron.getStaticData())
     })();
   },[]);
 

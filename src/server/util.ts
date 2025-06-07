@@ -1,4 +1,4 @@
-import { AttackMethod, Proxy, ProxyProtocol } from "./lib.js";
+import type { AttackMethod, Proxy, ProxyProtocol } from "./lib.js";
 
 const DEFAULT_HTTP_PORT = 8080;
 const DEFAULT_PROTOCOL: ProxyProtocol = "http";

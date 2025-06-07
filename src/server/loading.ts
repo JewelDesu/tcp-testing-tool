@@ -1,7 +1,7 @@
 import fs from "fs";
 import { join } from "path";
 
-import { Proxy } from "./lib.js";
+import type { Proxy } from "./lib.js";
 
 export const currentPath = () => {
   const path = process.cwd();
