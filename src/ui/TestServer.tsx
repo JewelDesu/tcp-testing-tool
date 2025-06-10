@@ -28,7 +28,7 @@ useEffect(() => {
 
 
         socket.on("disconnect", () => {
-            addLog("🔌 Disconnected from server");
+            addLog("Disconnected from server");
         });
 
         return () => {

@@ -39,11 +39,12 @@ header {
   display: grid;
   grid-template-columns: 70px 120px;
 }
-.titleBarDiv {
-}
 .titleBarDiv:nth-child(2){
   margin-left: 0.5rem;
   white-space: nowrap;
+}
+.titleBar:nth-child(1) button{
+  width: fit-content;
 }
 
 header button {

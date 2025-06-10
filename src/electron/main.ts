@@ -3,6 +3,7 @@ import { ipcMainHandle, ipcMainOn, isDev } from './util.js'
 import { getStaticData } from './resources.js';
 import { getAssetPath, getPreloadPath, getUIPath } from './pathResolve.js';
 import { spawn } from 'child_process';
+import { fileURLToPath } from "url";
 import path from 'path';
 import { createMenu } from './menu.js';
 import net from 'net';
@@ -12,6 +13,8 @@ import http from 'http';
 let testServer: net.Server | null = null;
 let httpServer: http.Server | null = null;
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 app.on("ready", () => {
   const mainWindow = new BrowserWindow({
@@ -142,16 +145,16 @@ app.on("ready", () => {
     }
   });
 
-  const serverPath = path.join(__dirname, '../dist-electron/tcpTestServer.cjs');
-  const testServerPath = path.join(__dirname, '../dist-electron/testServer.cjs');
+  // const serverPath = path.join(__dirname, '/tcpTestServer.js');
+  // const testServerPath = path.join(__dirname, '/testServer.js');
 
-  spawn('node', [serverPath], {
-    stdio: 'inherit',
-  });
+  // spawn('node', [serverPath], {
+  //   stdio: 'inherit',
+  // });
 
-  spawn('node', [testServerPath], {
-    stdio: 'inherit',
-  });
+  // spawn('node', [testServerPath], {
+  //   stdio: 'inherit',
+  // });
 
   createMenu(mainWindow);
   handleCloseEvents(mainWindow);
